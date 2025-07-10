@@ -23,6 +23,7 @@
 #define MESHTASTIC_LOG_LEVEL_ERROR "ERROR"
 #define MESHTASTIC_LOG_LEVEL_CRIT "CRIT "
 #define MESHTASTIC_LOG_LEVEL_TRACE "TRACE"
+#define MESHTASTIC_LOG_LEVEL_TEST "TEST "
 
 #include "SerialConsole.h"
 
@@ -52,6 +53,7 @@
 #define LOG_ERROR(...) DEBUG_PORT.log(MESHTASTIC_LOG_LEVEL_ERROR, __VA_ARGS__)
 #define LOG_CRIT(...) DEBUG_PORT.log(MESHTASTIC_LOG_LEVEL_CRIT, __VA_ARGS__)
 #define LOG_TRACE(...) DEBUG_PORT.log(MESHTASTIC_LOG_LEVEL_TRACE, __VA_ARGS__)
+#define LOG_TEST(...) DEBUG_PORT.log(MESHTASTIC_LOG_LEVEL_TEST, __VA_ARGS__)
 #else
 #define LOG_DEBUG(...)
 #define LOG_INFO(...)
@@ -59,6 +61,7 @@
 #define LOG_ERROR(...)
 #define LOG_CRIT(...)
 #define LOG_TRACE(...)
+#define LOG_TEST(...)
 #endif
 #endif
 

@@ -6,6 +6,8 @@
 #include "Throttle.h"
 #include "configuration.h"
 #include "error.h"
+#include "TestHdr.h"
+#include "PowerStatus.h" 
 #include "main.h"
 #include "mesh-pb-constants.h"
 #include <pb_decode.h>

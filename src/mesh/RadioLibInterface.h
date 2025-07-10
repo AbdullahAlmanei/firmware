@@ -57,7 +57,6 @@ class RadioLibInterface : public RadioInterface, protected concurrency::Notified
      * Raw ISR handler that just calls our polymorphic method
      */
     static void isrTxLevel0(), isrLevel0Common(PendingISR code);
-
     MeshPacketQueue txQueue = MeshPacketQueue(MAX_TX_QUEUE);
 
   protected:

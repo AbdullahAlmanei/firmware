@@ -10,6 +10,7 @@
 #include "ReliableRouter.h"
 #include "airtime.h"
 #include "buzz.h"
+#include "TestSender.h"
 
 #include "FSCommon.h"
 #include "Led.h"
@@ -1423,7 +1424,7 @@ void setup()
                                                     (float(rIf->getPacketTime(meshtastic_Constants_DATA_PAYLOAD_LEN)))) *
                                                        1000);
     }
-
+    TestSender::begin(90000);
     // This must be _after_ service.init because we need our preferences loaded from flash to have proper timeout values
     PowerFSM_setup(); // we will transition to ON in a couple of seconds, FIXME, only do this for cold boots, not waking from SDS
     powerFSMthread = new PowerFSMThread();

@@ -21,6 +21,7 @@
 #if ENABLE_JSON_LOGGING || ARCH_PORTDUINO
 #include "serialization/MeshPacketSerializer.h"
 #endif
+#include "TestHdr.h"
 
 #define MAX_RX_FROMRADIO                                                                                                         \
     4 // max number of packets destined to our queue, we dispatch packets quickly so it doesn't need to be big
@@ -635,6 +636,16 @@ void Router::handleReceived(meshtastic_MeshPacket *p, RxSource src)
             printPacket("handleReceived(USER)", p);
         else
             printPacket("handleReceived(REMOTE)", p);
+
+        // ── Custom handling for TEST_BED packets ──
+        if (p->which_payload_variant == meshtastic_MeshPacket_decoded_tag &&
+            p->decoded.portnum == meshtastic_PortNum_TEST_BED &&
+            p->decoded.payload.size >= sizeof(test_hdr_t)) {
+            const test_hdr_t *hdr = reinterpret_cast<const test_hdr_t *>(p->decoded.payload.bytes);
+            LOG_TEST("TEST_BED: ver=%u test_id=0x%08X seq=%u src=0x%08X tx_epoch_ms=%u hop_cnt=%u batt_mV=%u", 
+                hdr->ver, hdr->test_id, hdr->seq, hdr->src, hdr->tx_epoch_ms, hdr->hop_cnt, hdr->batt_mV);
+        }
+        // ─────────────────────────────────────────
 
         // Neighbor info module is disabled, ignore expensive neighbor info packets
         if (p->which_payload_variant == meshtastic_MeshPacket_decoded_tag &&

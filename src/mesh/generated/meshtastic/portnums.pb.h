@@ -140,6 +140,7 @@ typedef enum _meshtastic_PortNum {
     /* Private applications should use portnums >= 256.
  To simplify initial development and testing you can use "PRIVATE_APP"
  in your code without needing to rebuild protobuf files (via [regen-protos.sh](https://github.com/meshtastic/firmware/blob/master/bin/regen-protos.sh)) */
+    meshtastic_PortNum_TEST_BED = 222,
     meshtastic_PortNum_PRIVATE_APP = 256,
     /* ATAK Forwarder Module https://github.com/paulmandal/atak-forwarder
  ENCODING: libcotshrink */
