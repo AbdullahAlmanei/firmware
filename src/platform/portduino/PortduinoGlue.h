@@ -3,16 +3,21 @@
 #include <map>
 #include <unordered_map>
 
+#include "LR11x0Interface.h"
+#include "Module.h"
 #include "platform/portduino/USBHal.h"
 
 // Product strings for auto-configuration
 // {"PRODUCT_STRING", "CONFIG.YAML"}
 // YAML paths are relative to `meshtastic/available.d`
-inline const std::unordered_map<std::string, std::string> configProducts = {{"MESHTOAD", "lora-usb-meshtoad-e22.yaml"},
-                                                                            {"MESHSTICK", "lora-meshstick-1262.yaml"},
-                                                                            {"MESHADV-PI", "lora-MeshAdv-900M30S.yaml"},
-                                                                            {"MeshAdv Mini", "lora-MeshAdv-Mini-900M22S.yaml"},
-                                                                            {"POWERPI", "lora-MeshAdv-900M30S.yaml"}};
+inline const std::unordered_map<std::string, std::string> configProducts = {
+    {"MESHTOAD", "lora-usb-meshtoad-e22.yaml"},
+    {"MESHSTICK", "lora-meshstick-1262.yaml"},
+    {"MESHADV-PI", "lora-MeshAdv-900M30S.yaml"},
+    {"MeshAdv Mini", "lora-MeshAdv-Mini-900M22S.yaml"},
+    {"POWERPI", "lora-MeshAdv-900M30S.yaml"},
+    {"RAK6421-13300-S1", "lora-RAK6421-13300-slot1.yaml"},
+    {"RAK6421-13300-S2", "lora-RAK6421-13300-slot2.yaml"}};
 
 enum configNames {
     default_gpiochip,
@@ -109,7 +114,9 @@ enum configNames {
     mac_address,
     hostMetrics_interval,
     hostMetrics_channel,
-    hostMetrics_user_command
+    hostMetrics_user_command,
+    configDisplayMode,
+    has_configDisplayMode
 };
 enum { no_screen, x11, fb, st7789, st7735, st7735s, st7796, ili9341, ili9342, ili9486, ili9488, hx8357d };
 enum { no_touchscreen, xpt2046, stmpe610, gt911, ft5x06 };
@@ -125,3 +132,12 @@ static bool ends_with(std::string_view str, std::string_view suffix);
 void getMacAddr(uint8_t *dmac);
 bool MAC_from_string(std::string mac_str, uint8_t *dmac);
 std::string exec(const char *cmd);
+
+extern struct portduino_config_struct {
+    bool has_rfswitch_table = false;
+    uint32_t rfswitch_dio_pins[5] = {RADIOLIB_NC, RADIOLIB_NC, RADIOLIB_NC, RADIOLIB_NC, RADIOLIB_NC};
+    Module::RfSwitchMode_t rfswitch_table[8];
+    bool force_simradio = false;
+    bool has_device_id = false;
+    uint8_t device_id[16] = {0};
+} portduino_config;

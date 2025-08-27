@@ -3,6 +3,7 @@
 #include "buzz/BuzzerFeedbackThread.h"
 #include "input/ExpressLRSFiveWay.h"
 #include "input/InputBroker.h"
+#include "input/RotaryEncoderImpl.h"
 #include "input/RotaryEncoderInterruptImpl1.h"
 #include "input/SerialKeyboardImpl.h"
 #include "input/TrackballInterruptImpl1.h"
@@ -53,6 +54,7 @@
 #endif
 #if ARCH_PORTDUINO
 #include "input/LinuxInputImpl.h"
+#include "input/SeesawRotary.h"
 #include "modules/Telemetry/HostMetrics.h"
 #if !MESHTASTIC_EXCLUDE_STOREFORWARD
 #include "modules/StoreForwardModule.h"
@@ -163,18 +165,26 @@ void setupModules()
         // Example: Put your module here
         // new ReplyModule();
 #if (HAS_BUTTON || ARCH_PORTDUINO) && !MESHTASTIC_EXCLUDE_INPUTBROKER
-
         if (config.display.displaymode != meshtastic_Config_DisplayConfig_DisplayMode_COLOR) {
             rotaryEncoderInterruptImpl1 = new RotaryEncoderInterruptImpl1();
             if (!rotaryEncoderInterruptImpl1->init()) {
                 delete rotaryEncoderInterruptImpl1;
                 rotaryEncoderInterruptImpl1 = nullptr;
             }
+#ifdef T_LORA_PAGER
+            // use a special FSM based rotary encoder version for T-LoRa Pager
+            rotaryEncoderImpl = new RotaryEncoderImpl();
+            if (!rotaryEncoderImpl->init()) {
+                delete rotaryEncoderImpl;
+                rotaryEncoderImpl = nullptr;
+            }
+#else
             upDownInterruptImpl1 = new UpDownInterruptImpl1();
             if (!upDownInterruptImpl1->init()) {
                 delete upDownInterruptImpl1;
                 upDownInterruptImpl1 = nullptr;
             }
+#endif
             cardKbI2cImpl = new CardKbI2cImpl();
             cardKbI2cImpl->init();
 #ifdef INPUTBROKER_MATRIX_TYPE
@@ -189,6 +199,11 @@ void setupModules()
 #endif // HAS_BUTTON
 #if ARCH_PORTDUINO
         if (config.display.displaymode != meshtastic_Config_DisplayConfig_DisplayMode_COLOR) {
+            seesawRotary = new SeesawRotary("SeesawRotary");
+            if (!seesawRotary->init()) {
+                delete seesawRotary;
+                seesawRotary = nullptr;
+            }
             aLinuxInputImpl = new LinuxInputImpl();
             aLinuxInputImpl->init();
         }
